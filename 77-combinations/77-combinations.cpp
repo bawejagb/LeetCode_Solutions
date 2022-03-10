@@ -5,6 +5,7 @@ class Solution {
             res.push_back(path);
             return;
         }
+        else if(k>n-idx+1) return;
         for(int i=idx;i<=n;i++){
             path.push_back(i);
             backtrack(n,k-1,i+1,path);
