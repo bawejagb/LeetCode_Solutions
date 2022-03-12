@@ -8,6 +8,7 @@ class Solution {
         curr.push_back(nums[pos]);
         backTrack(nums, hset, curr, pos+1);
         curr.pop_back();
+        while(pos+1<nums.size()&&nums[pos]==nums[pos+1]) pos++;
         backTrack(nums, hset, curr, pos+1);
     }
 public:
