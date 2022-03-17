@@ -3,26 +3,18 @@ class StockSpanner {
     int cnt;
 public:
     StockSpanner() {
-        cnt=1;
+        cnt=0;
     }
     
     int next(int price) {
-        cnt=1;
-        if(st.empty()){
-            st.push({cnt,price});
-        }
-        else{
-            while(!st.empty()){
-                auto x = st.top();
-                if(x.second<=price){
-                    cnt += x.first;
-                    st.pop();
-                }
-                else break;
-            }
-            st.push({cnt,price});
-        }
-        return cnt;
+        int res=cnt+1;
+        while(!st.empty()&&st.top().second<=price)
+            st.pop();
+        if(!st.empty())
+            res -= st.top().first;
+        st.push({cnt+1,price});
+        cnt++;
+        return res;
     }
 };
 
