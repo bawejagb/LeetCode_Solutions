@@ -11,75 +11,23 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        bool carry=0;
-        int add;
-        ListNode* res;
+        int add=0;
+        ListNode res;
         ListNode* temp;
-        ListNode* node;
-        res = temp = node = NULL;
-        while(l1&&l2){
-            add = l1->val+l2->val;
-            if(carry){
-                add++;
-                carry=0;
+        temp = &res;
+        while(l1||l2||add){
+            if(l1){
+                add+= l1->val;
+                l1=l1->next;
             }
-            if(add>9){
-                add %= 10;
-                carry=1;
+            if(l2){
+                add+= l2->val;
+                l2=l2->next;
             }
-            node = new ListNode(add);
-            if(!temp){
-                res = temp = node;
-            }
-            else{
-                temp->next = node;
-                temp = node;
-            }
-            l1 = l1->next;
-            l2 = l2->next;
+            temp->next = new ListNode(add%10);
+            temp = temp->next;
+            add /= 10;
         }
-        while(l1){
-            add = l1->val;
-            if(carry){
-                add++;
-                carry=0;
-            }
-            if(add>9){
-                add %= 10;
-                carry=1;
-            }
-            node = new ListNode(add);
-            if(!temp){
-                res = temp = node;
-            }
-            else{
-                temp->next = node;
-                temp = node;
-            }
-            l1 = l1->next;
-        }
-        while(l2){
-            add = l2->val;
-            if(carry){
-                add++;
-                carry=0;
-            }
-            if(add>9){
-                add %= 10;
-                carry=1;
-            }
-            node = new ListNode(add);
-            if(!temp){
-                res = temp = node;
-            }
-            else{
-                temp->next = node;
-                temp = node;
-            }
-            l2 = l2->next;
-        }
-        if(carry)
-            temp->next = new ListNode(1);
-        return res;
+        return res.next;
     }
 };
