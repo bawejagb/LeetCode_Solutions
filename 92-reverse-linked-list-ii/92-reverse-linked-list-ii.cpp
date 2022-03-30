@@ -23,6 +23,7 @@ public:
                 end = node;
             node = node->next;
             cnt++;
+            if(start&&end) break;
         }
         if(!start || !end) return head;
         node = start;
