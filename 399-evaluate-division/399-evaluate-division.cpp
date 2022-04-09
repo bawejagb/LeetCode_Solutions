@@ -1,38 +1,50 @@
 class Solution {
-    map<string,vector<pair<string,double>>> graph;
-    void dfs(string u, string v, double &ans, double val, set<string> visit){
-        if(graph.find(u)==graph.end()) return;
-        if(visit.find(u)!=visit.end()) return;
-        visit.insert(u);
-        if(u == v){
-            ans = val;
-            cout << val<< ' ';
-            return;
-        }
-        for(auto x: graph[u]){
-            dfs(x.first, v, ans, val*x.second, visit);
-        }
-    }
 public:
     vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-        vector<double> res;
-        for(int i = 0; i < equations.size(); i++){
-            string v, u;
-            u = equations[i][0];
-            v = equations[i][1];
-            graph[u].push_back({v,values[i]});
-            graph[v].push_back({u,1/values[i]});
+        int nvar = 0;
+        unordered_map<string,int> vars;
+        for(int i = 0;i<equations.size();i++){
+            string va = equations[i][0], vb = equations[i][1];
+            if(vars.count(va) == 0)
+                vars[va] = nvar++;
+            if(vars.count(vb) == 0)
+                vars[vb] = nvar++;           
         }
-        double ans, val;
-        for(auto x: queries){
-            string u = x[0];
-            string v = x[1];
-            ans = -1;
-            val = 1;
-            set<string> visit;
-            dfs(u,v,ans,val,visit);
-            res.push_back(ans);
+        vector<vector<pair<int,double>>> edges(nvar);
+        for(int i = 0;i<equations.size();i++){
+            int va = vars[equations[i][0]], vb = vars[equations[i][1]];
+            edges[va].push_back({vb,values[i]});
+            edges[vb].push_back({va,1.0/values[i]});            
         }
-        return res;
+        vector<double> ret;
+        for(auto q : queries){
+            double result = -1.0;
+            if(vars.count(q[0]) && vars.count(q[1])){
+                int ia = vars[q[0]], ib = vars[q[1]];
+                if(ia == ib)
+                    result = 1;
+                else{
+                    queue<int> que;
+                    que.push(ia);
+                    vector<double> ratio(nvar,-1);
+                    ratio[ia] = 1;
+                    while(!que.empty() && ratio[ib] == -1)
+                    {
+                        int x = que.front();que.pop();
+                        for(auto [y,val] : edges[x])
+                        {
+                            if(ratio[y] == -1)
+                            {
+                                ratio[y] = ratio[x] * val;
+                                que.push(y);
+                            }
+                        }       
+                    }
+                    result = ratio[ib];
+                }
+            }
+            ret.push_back(result);            
+        }
+        return ret;
     }
 };
