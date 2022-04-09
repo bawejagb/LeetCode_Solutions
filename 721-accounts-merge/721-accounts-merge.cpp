@@ -1,32 +1,55 @@
 class Solution {
-    unordered_map<string,vector<string>> hmap;
-    void dfs(set<string> &hset, vector<string> &temp, string s){
-        if(hset.find(s)!=hset.end()) return;
-        hset.insert(s);
-        temp.push_back(s);
-        for(auto x: hmap[s]){
-            dfs(hset, temp, x);
+    
+    class UnionFind{
+        vector<int> rank, root;
+        public:
+        UnionFind(int size){
+            for(int i=0;i<size;i++){
+                root.push_back(i);
+                rank.push_back(i);
+            }
         }
-     }
+        int find(int x){
+            if(root[x] == x) return x;
+            return root[x] = find(root[x]);
+        }
+        void connect(int x, int y){
+            int rx = find(x);
+            int ry = find(y);
+            if(rx==ry) return;
+            if(rank[rx]>=rank[ry]){
+                root[ry] = rx;
+                rank[rx] += rank[ry];
+            }
+            else{
+                root[rx] = ry;
+                rank[ry] += rank[rx];
+            }
+        }
+    };
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
         vector<vector<string>> res;
-        for(int i=0;i<accounts.size();i++){
+        int n = accounts.size();
+        UnionFind uf(n);
+        unordered_map<string, int> emailGrp;
+        unordered_map<int,vector<string>> comp;
+        for(int i=0;i<n;i++){
             for(int j=1;j<accounts[i].size();j++){
-                if(j+1<accounts[i].size())
-                    hmap[accounts[i][j]].push_back(accounts[i][j+1]);
-                if(j>1)
-                    hmap[accounts[i][j]].push_back(accounts[i][j-1]);
+                string email = accounts[i][j];
+                if(emailGrp.find(email)!=emailGrp.end())
+                    uf.connect(i,emailGrp[email]);
+                else
+                    emailGrp[email]= i;
             }
         }
-        set<string> hset;
-        for(int i=0;i<accounts.size();i++){
-            vector<string> temp;
-            temp.push_back(accounts[i][0]);
-            dfs(hset, temp, accounts[i][1]);
+        for(auto item : emailGrp)
+            comp[uf.find(item.second)].push_back(item.first);
+        for(auto item : comp){
+            vector<string> temp = {accounts[item.first][0]};
+            temp.insert(temp.end(), item.second.begin(),item.second.end());
             sort(temp.begin()+1,temp.end());
-            if(temp.size()>1)
-                res.push_back(temp);
+            res.emplace_back(temp);
         }
         return res;
     }
