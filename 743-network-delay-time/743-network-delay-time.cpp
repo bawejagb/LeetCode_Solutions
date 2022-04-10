@@ -1,21 +1,23 @@
 class Solution {
     vector<pair<int,int>> adj[101];
     void dijakstra(vector<int> &recTime, int k){
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> qt;
-        qt.push({0,k});
+        set<pair<int,int>> qt;
+        qt.insert({0,k});
         recTime[k] = 0;
         while(!qt.empty()){
-            auto node = qt.top();
-            qt.pop();
-            if(node.first > recTime[node.second]) 
+            auto it = qt.begin();
+            int node = it->second;
+            int node_time = it->first;
+            qt.erase(it);
+            if(node_time > recTime[node]) 
                 continue;
-            for(auto edge : adj[node.second]){
+            for(auto edge : adj[node]){
                 int time = edge.first;
                 int des = edge.second;
-                int val = time + recTime[node.second];
+                int val = time + recTime[node];
                 if(val < recTime[des]){
                     recTime[des] = val;
-                    qt.push({recTime[des],des});
+                    qt.insert({recTime[des],des});
                 }
             }
         }
