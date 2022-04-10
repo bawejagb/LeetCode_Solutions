@@ -8,7 +8,6 @@ class Solution {
         while(!qt.empty()){
             auto it = qt.begin();
             int node = it->second;
-            int node_time = it->first;
             qt.erase(it);
             if(visit[node]) 
                 continue;
