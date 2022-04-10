@@ -1,21 +1,21 @@
 class Solution {
     vector<pair<int,int>> adj[101];
-    void BFS(vector<int> &recTime, int k){
-        queue<int> qt;
-        qt.push(k);
+    void dijakstra(vector<int> &recTime, int k){
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> qt;
+        qt.push({0,k});
+        recTime[k] = 0;
         while(!qt.empty()){
-            int size = qt.size();
-            while(size--){
-                int node = qt.front();
-                qt.pop();
-                for(auto pr : adj[node]){
-                    int time = pr.first;
-                    int des = pr.second;
-                    int val = time + recTime[node];
-                    if(val < recTime[des]){
-                        qt.push(des);
-                        recTime[des] = val;
-                    }
+            auto node = qt.top();
+            qt.pop();
+            if(node.first > recTime[node.second]) 
+                continue;
+            for(auto edge : adj[node.second]){
+                int time = edge.first;
+                int des = edge.second;
+                int val = time + recTime[node.second];
+                if(val < recTime[des]){
+                    recTime[des] = val;
+                    qt.push({recTime[des],des});
                 }
             }
         }
@@ -30,8 +30,7 @@ public:
             adj[src].push_back({time, des});
         }
         vector<int> recTime(n+1,INT_MAX);
-        recTime[k] = 0;
-        BFS(recTime, k);
+        dijakstra(recTime, k);
         for(int i=1;i<n+1;i++){
            ans = max(ans, recTime[i]); 
         }
