@@ -2,6 +2,7 @@ class Solution {
     vector<pair<int,int>> adj[101];
     void dijakstra(vector<int> &recTime, int k){
         set<pair<int,int>> qt;
+        vector<bool> visit(101,0);
         qt.insert({0,k});
         recTime[k] = 0;
         while(!qt.empty()){
@@ -9,11 +10,14 @@ class Solution {
             int node = it->second;
             int node_time = it->first;
             qt.erase(it);
-            if(node_time > recTime[node]) 
+            if(visit[node]) 
                 continue;
+            visit[node] = true;
             for(auto edge : adj[node]){
                 int time = edge.first;
                 int des = edge.second;
+                if(visit[des]) 
+                    continue;
                 int val = time + recTime[node];
                 if(val < recTime[des]){
                     recTime[des] = val;
