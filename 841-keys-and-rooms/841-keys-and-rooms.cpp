@@ -16,8 +16,6 @@ public:
         key[0] = true;
         for(int i=0;i<n;i++){
             dfs(rooms,i,visit,key);
-        }
-        for(int i=0;i<n;i++){
             if(!visit[i]) return false;
         }
         return true;
