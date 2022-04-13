@@ -1,49 +1,59 @@
 class Solution {
-    vector<string> grid_;
-    vector<vector<vector<bool>>> visited;
-    int H,W;
-    bool border(int row, int col){
-        return (row>=0&&row<H&&col>=0&&col<W);
+    vector<int> parent,rank;
+    int count;
+    int findParent(int node){
+        if(node == parent[node])
+            return node;
+        return parent[node] = findParent(parent[node]);
     }
-    void dfs(int row, int col, int type){
-        if(!border(row, col) || visited[row][col][type]) return;
-        visited[row][col][type] = true;
-        switch (type){
-            case 0:
-                dfs(row-1,col,2);
-                break;
-            case 1:
-                dfs(row,col+1,3);
-                break;
-            case 2:
-                dfs(row+1,col,0);
-                break;
-            case 3:
-                dfs(row,col-1,1);
-                break;
+    void unionn(int u, int v){
+        u = findParent(u);
+        v = findParent(v);
+        if(u==v) count++;
+        else{
+            if(rank[u]<rank[v])
+                parent[u] = v;
+            else if(rank[u]>rank[v])
+                parent[v] = u;
+            else
+                parent[v] = u;
+            rank[u]++;
         }
-        if(grid_[row][col]!='/')
-            dfs(row,col,type^1);
-        if(grid_[row][col]!='\\')
-            dfs(row,col,type^3);
     }
 public:
     int regionsBySlashes(vector<string>& grid) {
-        grid_ = grid;
-        H = grid.size();
-        W = grid[0].size();
-        visited.clear();
-        visited.resize(H,vector<vector<bool>>(W,vector<bool>(4,false)));
-        int regions = 0;
-        for(int i=0;i<H;i++){
-           for(int j=0;j<W;j++){
-               for(int k=0;k<4;k++){
-                   if(visited[i][j][k]) continue;
-                   dfs(i,j,k);
-                   regions++;
+        int H = grid.size();
+        int dots = H+1;
+        count = 1;
+        parent.resize(dots*dots+1);
+        rank.resize(dots*dots+1);
+        for(int i=0;i<parent.size();i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        for(int i=0;i<dots;i++){
+           for(int j=0;j<dots;j++){
+               if(i==0||j==0||i==dots-1||j==dots-1){
+                   int cell = i*dots+j;
+                   if(cell!=0)
+                       unionn(0,cell);
                }
            } 
         }
-        return regions;
+        for(int i=0;i<H;i++){
+            for(int j=0;j<H;j++){
+                if(grid[i][j]=='/'){
+                    int cell1 = i*dots+j+1;
+                    int cell2 = (i+1)*dots+j;
+                    unionn(cell1,cell2);
+                }
+                if(grid[i][j]=='\\'){
+                    int cell1 = i*dots+j;
+                    int cell2 = (i+1)*dots+j+1;
+                    unionn(cell1,cell2);
+                }
+            }
+        }
+        return count;
     }
 };
