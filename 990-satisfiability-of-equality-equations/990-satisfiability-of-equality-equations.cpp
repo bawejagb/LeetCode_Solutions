@@ -16,6 +16,7 @@ public:
         for(int i=0;i<26;i++){
             if(color[i]==0){
                 col++;
+                color[i] = col;
                 queue<int> qt;
                 qt.push(i);
                 while(!qt.empty()){
