@@ -1,77 +1,140 @@
+class Node{
+    public:
+    int val = 0;
+    int key = 0;
+    int frequency = 1;
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    Node(int k, int v){
+        key = k;
+        val = v;
+    }
+};
+class DoublyLinkedList{
+    public:
+    Node* head = nullptr;
+    Node* tail = nullptr;
+    int size = 0;
+    DoublyLinkedList(){
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head->next = tail;
+        tail->prev = head;
+    }
+};
 class LFUCache {
-  struct KV {
-    int key;
-    int value;
-    int freq;
-    KV() {}
-    KV(int k, int v, int f = 1) : key(k), value(v), freq(f) {}
-  };
-
-  std::map<int, std::list<KV>> freq2kv_;
-  std::unordered_map<int, std::list<KV>::iterator> key2pos_;
-  int capacity_;
-
- public:
-  LFUCache(int capacity) : capacity_(capacity) {}
-
-  int get(int key) {
-    auto it_key2pos = key2pos_.find(key);
-    if (it_key2pos == key2pos_.end()) {
-      return -1;
+public:
+    int capacity = 0;
+    int size = 0;
+    int minFreq = 0;
+    unordered_map<int, DoublyLinkedList*> freqDll; //freq, doublyLinkedList
+    unordered_map<int, Node*> freqNode; //key, Node
+    
+    LFUCache(int capacity) {
+        this->capacity = capacity;
     }
-    auto it_kv = it_key2pos->second;
-    auto kv = *it_kv;
-    int ret = kv.value;
-    int old_freq = kv.freq++;
-    auto it_freq2kv = freq2kv_.find(old_freq);
-    it_freq2kv->second.erase(it_kv);
-    if (it_freq2kv->second.empty()) {
-      freq2kv_.erase(it_freq2kv);
-    }
-    auto& kv_list = freq2kv_[kv.freq];
-    auto it_list = kv_list.insert(kv_list.begin(), kv);
-    key2pos_[key] = it_list;
+    
+    int get(int key) {
+        if(freqNode.find(key) == freqNode.end()) return -1;
+        else{
+            Node* curr = freqNode[key];
+            //change Node object
+            curr->frequency++;
+            //remove from previous dll
+            Node* p = curr->prev;
+            Node* n = curr->next;
+            p->next = n;
+            n->prev = p;
+            //decrease size of previous dll
+            DoublyLinkedList* crlist = freqDll[curr->frequency-1];
+            crlist->size--;
+            //check for empty list
+            if(crlist->size <= 0){
+                if(curr->frequency-1 == minFreq) minFreq++;
+                freqDll.erase(curr->frequency-1);
+            }
+            //add to new list
+            if(freqDll.find(curr->frequency) == freqDll.end()) freqDll.insert({curr->frequency, new DoublyLinkedList()});
+            DoublyLinkedList* newlist = freqDll[curr->frequency];
 
-    return ret;
-  }
+            //add node to new list
+            newlist->size++;
+            curr->next = newlist->head->next;
+            curr->next->prev = curr;
+            newlist->head->next = curr;
+            curr->prev = newlist->head;
+            return curr->val;
+        }
+    }
+    
+    void put(int key, int value) {
+        if(freqNode.find(key) == freqNode.end()){
+            if(size < capacity){
+                size++;
+                //create new node
+                Node* curr = new Node(key, value);
+                freqNode.insert({key, curr});
+                minFreq = 1;
+                if(freqDll.find(1) == freqDll.end()) freqDll.insert({1, new DoublyLinkedList()});
+                DoublyLinkedList* curlist = freqDll[1];
+                curlist->size++;
+                curr->next = curlist->head->next;
+                curr->next->prev = curr;
+                curlist->head->next = curr;
+                curr->prev = curlist->head;
+            }else{
+                //delete less frequent and create new
+                if(freqDll.find(minFreq) == freqDll.end()) return;
+                DoublyLinkedList* curlist = freqDll[minFreq];
+                curlist->size--;
+                Node* todelete = curlist->tail->prev;
+                freqNode.erase(todelete->key);
+                todelete->prev->next = todelete->next;
+                todelete->next->prev = todelete->prev;
+                delete todelete;
+                minFreq = 1;
+                
+                Node* curr = new Node(key, value);
+                freqNode.insert({key, curr});
+                if(freqDll.find(1) == freqDll.end()) freqDll.insert({1, new DoublyLinkedList()});
+                DoublyLinkedList* curlist2 = freqDll[1];
+                curlist2->size++;
+                curr->next = curlist2->head->next;
+                curr->next->prev = curr;
+                curlist2->head->next = curr;
+                curr->prev = curlist2->head;
+            }
+        }else{
+            Node* curr = freqNode[key];
+            //change Node object
+            curr->frequency++;
+            curr->val = value;
+            //remove from previous dll
+            Node* p = curr->prev;
+            Node* n = curr->next;
+            p->next = n;
+            n->prev = p;
+            //decrease size of previous dll
+            DoublyLinkedList* crlist = freqDll[curr->frequency-1];
+            crlist->size--;
+            //check for empty list
+            if(crlist->size <= 0){
+                if(curr->frequency-1 == minFreq)
+                minFreq++;
+                freqDll.erase(curr->frequency-1);
+            }
+            //add to new list
+            if(freqDll.find(curr->frequency) == freqDll.end()) freqDll.insert({curr->frequency, new DoublyLinkedList()});
+            DoublyLinkedList* newlist = freqDll[curr->frequency];
 
-  void put(int key, int value) {
-    if (!capacity_) {
-      return;
+            //add node to new list
+            newlist->size++;
+            curr->next = newlist->head->next;
+            curr->next->prev = curr;
+            newlist->head->next = curr;
+            curr->prev = newlist->head;
+        }
     }
-    auto it_key2pos = key2pos_.find(key);
-    // Evict
-    if (key2pos_.size() == capacity_ && it_key2pos == key2pos_.end()) {
-      auto& kv_list = freq2kv_.begin()->second;
-      auto kv = kv_list.back();
-      kv_list.pop_back();
-      if (kv_list.empty()) {
-        freq2kv_.erase(freq2kv_.begin());
-      }
-      key2pos_.erase(kv.key);
-    }
-
-    // Insert
-    if (it_key2pos == key2pos_.end()) {
-      auto& kv_list = freq2kv_[1];
-      auto pos = kv_list.insert(kv_list.begin(), KV(key, value));
-      key2pos_.insert({key, pos});
-    } else {
-      // Update
-      auto it_kv = it_key2pos->second;
-      auto kv = *it_kv;
-      kv.value = value;
-      int old_req = kv.freq++;
-      auto it_freq2kv = freq2kv_.find(old_req);
-      it_freq2kv->second.erase(it_kv);
-      if (it_freq2kv->second.empty()) {
-        freq2kv_.erase(it_freq2kv);
-      }
-      auto& kv_list = freq2kv_[kv.freq];
-      it_kv = kv_list.insert(kv_list.begin(), kv);
-      key2pos_[key] = it_kv;
-    }
-  }
 };
 
 /**
