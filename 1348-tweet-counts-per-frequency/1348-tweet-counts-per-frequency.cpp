@@ -1,5 +1,5 @@
 class TweetCounts {
-    map<string,multiset<int>> tmap;
+    map<string,multiset<int>> tweetTimeline;
     unordered_map <string, int> freqEnum;
 public:
     TweetCounts() {
@@ -9,22 +9,22 @@ public:
     }
     
     void recordTweet(string tweetName, int time) {
-        tmap[tweetName].insert(time);
+        tweetTimeline[tweetName].insert(time);
     }
     
     vector<int> getTweetCountsPerFrequency(string freq, string tweetName, int startTime, int endTime) {
-        int div;
-        div = freqEnum[freq];
-        auto vec = tmap[tweetName];
-        int num = (endTime-startTime)/div;
-        vector<int> res(num+1,0);
-        auto start = vec.lower_bound(startTime);
-        auto end = vec.upper_bound(endTime);
-        while(start != end){
-            res[(*start-startTime)/div]++;
-            start++;
+        int intervals = ((endTime - startTime) /  freqEnum[freq]) + 1;
+        vector <int> tweetCountsPerFrequency(intervals, 0);
+        
+        auto tweetClosestToStartTimeItr = tweetTimeline[tweetName].lower_bound(startTime);   
+        auto tweetClosestToEndTimeItr = tweetTimeline[tweetName].upper_bound(endTime);
+        
+        for(auto it = tweetClosestToStartTimeItr; it != tweetClosestToEndTimeItr; it++) {
+            int idx = (*it - startTime) / freqEnum[freq]; // see which frequency interval my current time lies in
+            tweetCountsPerFrequency[idx]++;
         }
-        return res;
+        
+        return tweetCountsPerFrequency;
     }
 };
 
