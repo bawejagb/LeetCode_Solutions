@@ -1,7 +1,11 @@
 class TweetCounts {
     map<string,multiset<int>> tmap;
+    unordered_map <string, int> freqEnum;
 public:
     TweetCounts() {
+        freqEnum["minute"] = 60;
+        freqEnum["hour"] = 60 * freqEnum["minute"];
+        freqEnum["day"] = 60 * freqEnum["hour"];
     }
     
     void recordTweet(string tweetName, int time) {
@@ -10,15 +14,13 @@ public:
     
     vector<int> getTweetCountsPerFrequency(string freq, string tweetName, int startTime, int endTime) {
         int div;
-        if(freq[0] == 'm') div = 60;
-        else if(freq[0] == 'h') div = 3600;
-        else div = 86400;
+        div = freqEnum[freq];
         auto vec = tmap[tweetName];
         int num = (endTime-startTime)/div;
         vector<int> res(num+1,0);
         auto start = vec.lower_bound(startTime);
         auto end = vec.upper_bound(endTime);
-        while(start != end && *start<= endTime){
+        while(start != end){
             res[(*start-startTime)/div]++;
             start++;
         }
