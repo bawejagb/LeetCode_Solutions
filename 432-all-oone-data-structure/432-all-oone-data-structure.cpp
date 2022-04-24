@@ -1,10 +1,8 @@
 class AllOne {
     set<pair<int,string>> hset;
     unordered_map<string,int> smap;
-    int mn, mx;
 public:
     AllOne() {
-        mn=mx=0;
     }
     
     void inc(string key) {
