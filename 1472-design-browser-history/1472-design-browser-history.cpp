@@ -1,37 +1,27 @@
 class BrowserHistory {
-    struct Node{
-        string url;
-        Node* next;
-        Node* prev;
-        Node(string url){this->url=url;next=NULL;prev=NULL;}
-    };
-    Node* current;
+    vector<string> hist;
+    int index;
 public:
     BrowserHistory(string homepage) {
-        current = new Node(homepage);
+        hist.push_back(homepage);
+        index = 0;
     }
     
     void visit(string url) {
-        current->next = new Node(url);
-        current->next->prev = current;
-        current = current->next;
+        hist.resize(index+2);
+        index++;
+        hist[index] = url;
         
     }
     
     string back(int steps) {
-        while(steps--){
-            if(!current->prev) break;
-            current = current->prev;
-        }
-        return current->url;
+        index = max(0,index-steps);
+        return hist[index];
     }
     
     string forward(int steps) {
-        while(steps--){
-            if(!current->next) break;
-            current = current->next;
-        }
-        return current->url;
+        index = min((int)(index+steps), (int)(hist.size()-1));
+        return hist[index];
     }
 };
 
