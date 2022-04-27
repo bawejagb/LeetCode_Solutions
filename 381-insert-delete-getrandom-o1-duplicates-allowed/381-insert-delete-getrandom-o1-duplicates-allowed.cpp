@@ -1,47 +1,35 @@
 class RandomizedCollection {
-    unordered_map<int,set<int>> hmap;
-    vector<int> vc;
-    int sz;
+    vector<pair<int, int>> nums;
+    unordered_map<int, vector<int>> m;
 public:
     RandomizedCollection() {
-        sz=0;
+        
     }
-    
+
     bool insert(int val) {
-        bool fg;
-        if(hmap.find(val)==hmap.end()) fg=1;
-        else fg=0;
-        vc.push_back(val);
-        hmap[val].insert(sz);
-        sz++;
-        return fg;
+        auto result = m.find(val) == m.end();
+        
+        m[val].push_back(nums.size());
+        nums.push_back(pair<int, int>(val, m[val].size() - 1));
+        
+        return result;
     }
+
     bool remove(int val) {
-        bool fg;
-        if(hmap.find(val)!=hmap.end()){
-            fg=1;
-            int idx = *hmap[val].begin();
-            hmap[val].erase(hmap[val].begin());
-            if(hmap[val].empty()) hmap.erase(val);
-            if(sz==1||idx==sz-1){
-                sz--;
-                vc.resize(sz);
-                return true;
-            }
-            vc[idx] = vc[sz-1];
-            auto it = hmap[vc[sz-1]].end();
-            --it;
-            hmap[vc[sz-1]].erase(it);
-            hmap[vc[sz-1]].insert(idx);
-            sz--;
-            vc.resize(sz);
+        auto result = m.find(val) != m.end();
+        if(result)
+        {
+            auto last = nums.back();
+            m[last.first][last.second] = m[val].back();
+            nums[m[val].back()] = last;
+            m[val].pop_back();
+            if(m[val].empty()) m.erase(val);
+            nums.pop_back();
         }
-        else fg=0;
-        return fg;
+        return result;
     }
-    
     int getRandom() {
-        return vc[rand()%sz];
+        return nums[rand() % nums.size()].first;
     }
 };
 
