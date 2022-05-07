@@ -2,11 +2,11 @@ class Solution {
 public:
     int maxCoins(vector<int>& nums) {
         int n = nums.size();
-        vector<int> A(n+2);
+        int A[302],dp[302][302]={0};
         A[0]=A[n+1]=1;
         for(int i=1;i<=n;i++)
             A[i] = nums[i-1];
-        vector<vector<int>>dp(n+2,vector<int>(n+2,0));
+        
         for(int i=1;i<=n;i++){
            for(int j = 1; j<=n-i+1;j++){
                int r = j+i-1;
