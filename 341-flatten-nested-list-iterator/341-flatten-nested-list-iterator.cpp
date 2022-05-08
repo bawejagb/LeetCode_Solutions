@@ -20,22 +20,20 @@ class NestedIterator
 {
     vector<int> flatten;
     int cur;
-    void preprocess(NestedInteger val)
+    void preprocess(vector<NestedInteger> &nestedList)
     {
-        if (val.isInteger()) 
-            flatten.push_back(val.getInteger());
-        else
-        {
-            for (NestedInteger x: val.getList())
-                preprocess(x);
+        for (NestedInteger &val: nestedList){
+            if (val.isInteger()) 
+                flatten.push_back(val.getInteger());
+            else
+                preprocess(val.getList());
         }
     }
     public:
         NestedIterator(vector<NestedInteger> &nestedList)
         {
             cur = 0;
-            for (NestedInteger x: nestedList)
-                preprocess(x);
+            preprocess(nestedList);
         }
 
     int next()
