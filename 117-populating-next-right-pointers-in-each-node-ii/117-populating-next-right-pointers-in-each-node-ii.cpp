@@ -16,30 +16,38 @@ public:
 };
 */
 
-class Solution {
-public:
-    Node* connect(Node* root) {
-        Node* LeftMost = NULL;
-        Node* prev = NULL;
-        Node* rNode = root;
-        
-        while(root){
-            if(root->left){
-                if(!LeftMost) LeftMost = root->left;
-                if(prev)  prev->next = root->left;
-                root->left->next = root->right;
-                prev = root->right? root->right : root->left;
+class Solution
+{
+    public:
+        Node* connect(Node *root)
+        {
+            Node *LeftMost = NULL;
+            Node *prev = NULL;
+            Node *rootNode = root;
+            Node *parentNode = root;
+            while (parentNode)
+            {
+                LeftMost = prev = NULL;
+                root = parentNode;
+                while (root)
+                {
+                    if (root->left)
+                    {
+                        if (!LeftMost) LeftMost = root->left;
+                        if (prev) prev->next = root->left;
+                        root->left->next = root->right;
+                        prev = root->right ? root->right : root->left;
+                    }
+                    else if (root->right)
+                    {
+                        if (!LeftMost) LeftMost = root->right;
+                        if (prev) prev->next = root->right;
+                        prev = root->right;
+                    }
+                    root = root->next;
+                }
+                parentNode = LeftMost;
             }
-            else if(root->right){
-                if(!LeftMost) LeftMost = root->right;
-                if(prev) prev->next = root->right;
-                prev = root->right;
-            }
-            root = root->next;
+            return rootNode;
         }
-        
-        if(LeftMost) connect(LeftMost);
-        
-        return rNode;
-    }
 };
