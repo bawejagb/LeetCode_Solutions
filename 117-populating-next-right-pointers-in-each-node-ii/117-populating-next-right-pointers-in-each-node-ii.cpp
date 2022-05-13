@@ -19,10 +19,10 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        if(!root) return root;
         Node* LeftMost = NULL;
         Node* prev = NULL;
         Node* rNode = root;
+        
         while(root){
             if(root->left){
                 if(!LeftMost) LeftMost = root->left;
@@ -37,7 +37,9 @@ public:
             }
             root = root->next;
         }
-        connect(LeftMost);
+        
+        if(LeftMost) connect(LeftMost);
+        
         return rNode;
     }
 };
