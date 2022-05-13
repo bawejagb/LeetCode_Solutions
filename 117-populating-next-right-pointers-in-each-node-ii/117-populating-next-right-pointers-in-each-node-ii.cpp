@@ -15,7 +15,6 @@ public:
         : val(_val), left(_left), right(_right), next(_next) {}
 };
 */
-
 class Solution
 {
     public:
@@ -24,30 +23,27 @@ class Solution
             Node *LeftMost = NULL;
             Node *prev = NULL;
             Node *rootNode = root;
-            Node *parentNode = root;
-            while (parentNode)
+
+            while (root)
             {
-                LeftMost = prev = NULL;
-                root = parentNode;
-                while (root)
+                if (root->left)
                 {
-                    if (root->left)
-                    {
-                        if (!LeftMost) LeftMost = root->left;
-                        if (prev) prev->next = root->left;
-                        root->left->next = root->right;
-                        prev = root->right ? root->right : root->left;
-                    }
-                    else if (root->right)
-                    {
-                        if (!LeftMost) LeftMost = root->right;
-                        if (prev) prev->next = root->right;
-                        prev = root->right;
-                    }
-                    root = root->next;
+                    if (!LeftMost) LeftMost = root->left;
+                    if (prev) prev->next = root->left;
+                    root->left->next = root->right;
+                    prev = root->right ? root->right : root->left;
                 }
-                parentNode = LeftMost;
+                else if (root->right)
+                {
+                    if (!LeftMost) LeftMost = root->right;
+                    if (prev) prev->next = root->right;
+                    prev = root->right;
+                }
+                root = root->next;
             }
+
+            if (LeftMost) connect(LeftMost);
+
             return rootNode;
         }
 };
