@@ -1,19 +1,25 @@
 class Solution {
+    int fun(int x, int K, int N) {
+        int ans = 0, r = 1;
+        for (int i = 1; i <= K; ++i) {
+            r *= x-i+1;
+            r /= i;
+            ans += r;
+            if (ans >= N) break;
+        }
+        return ans;
+    }
 public:
     int superEggDrop(int k, int n) {
-        vector<int> dp(n+1);
-        for(int i=0;i<=n;i++)
-            dp[i] = i;
-        for(int j=2;j<=k;j++){
-            vector<int> dp2(n+1);
-            int x=1;
-            for(int i = 1;i <= n; i++){
-                while(x<i&&max(dp[x-1],dp2[i-x])>max(dp[x],dp2[i-x-1]))
-                      x++;
-                dp2[i] = 1+max(dp[x-1],dp2[i-x]);
-            }
-            dp = dp2;
+        int lo = 1, hi = n;
+        while (lo < hi) {
+            int mi = (lo + hi) / 2;
+            if (fun(mi, k, n) < n)
+                lo = mi + 1;
+            else
+                hi = mi;
         }
-        return dp[n];
+
+        return lo;
     }
 };
