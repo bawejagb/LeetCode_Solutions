@@ -2,7 +2,8 @@ class Solution {
 public:
     int countPalindromicSubsequences(string s) {
         int n = s.size();
-        long dp[1001][1001];
+        long dp[n+1][n+1];
+        memset(dp,0,sizeof dp);
         long MOD = 1e9+7;
         for(int i=n-1;i>=0;i--){
             dp[i][i]=1;
