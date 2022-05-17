@@ -11,13 +11,11 @@
 class Solution {
 public:
     TreeNode* getTargetCopy(TreeNode* original, TreeNode* cloned, TreeNode* target) {
-        if(target==original) return cloned;
-        TreeNode *left,*right;
-        left=right=NULL;
-        if(original->left) left = getTargetCopy(original->left,cloned->left,target);
-        if(original->right) right = getTargetCopy(original->right,cloned->right,target);
-        if(left) return left;
-        return right;
-        
+        if(original==NULL) return NULL;
+        if(original == target) return cloned;
+        TreeNode* lt = getTargetCopy(original->left, cloned->left, target);
+        TreeNode* rt = getTargetCopy(original->right, cloned->right, target);
+        if(lt) return lt;
+        else return rt;
     }
 };
