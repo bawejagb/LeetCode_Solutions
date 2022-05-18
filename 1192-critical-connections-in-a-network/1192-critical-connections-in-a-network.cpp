@@ -1,44 +1,37 @@
 class Solution {
-    unordered_map<int,vector<int>> adj; //Adj list
-    void DFS(int u,vector<int>& disc,vector<int>& low,vector<int>& parent,vector<vector<int>>& bridges)
-    {
-        static int time = 0;    //timestamp
-        disc[u] = low[u] = time;
-        time +=1;
-        
-        for(int v: adj[u])
-        {
-            if(disc[v]==-1) //If v is not visited
-            {
-                parent[v] = u;
-                DFS(v,disc,low,parent,bridges);
-                low[u] = min(low[u],low[v]);
-                
-                if(low[v] > disc[u])
-                    bridges.push_back(vector<int>({u,v}));
+    vector<int> dis,low;
+    vector<vector<int>> bridge, adj;
+    int time;
+    void dfs(int node, int prev){
+        time++;
+        low[node] = dis[node] = time;
+        for(auto x : adj[node]){
+            if(x==prev) continue;
+            else if(dis[x]!=-1){
+               low[node] = min(low[node],dis[x]);
+                continue;
             }
-            else if(v!=parent[u])   //Check for back edge
-                low[u] = min(low[u],disc[v]);
+            dfs(x,node);
+            low[node] = min(low[node],low[x]);
+            if(low[x] > dis[node])
+                bridge.push_back({node,x});
         }
-    }
-    void findBridges_Tarjan(int V,vector<vector<int>>& bridges)
-    {
-        vector<int> disc(V,-1),low(V,-1),parent(V,-1);
-        //Apply DFS for each component
-        for(int i=0;i<V;++i)
-            if(disc[i]==-1)
-                DFS(i,disc,low,parent,bridges);
+        
     }
 public:
     vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
-        for(int i=0;i<connections.size();++i)   //Make Adj list
-        {
-            adj[connections[i][0]].push_back(connections[i][1]);
-            adj[connections[i][1]].push_back(connections[i][0]);
+        dis.resize(n,-1);
+        low.resize(n,-1);
+        adj.resize(n);
+        time=0;
+        for(auto x : connections){
+            adj[x[0]].push_back(x[1]);
+            adj[x[1]].push_back(x[0]);
         }
-        
-        vector<vector<int>> bridges; //Store all the bridges as pairs
-        findBridges_Tarjan(n,bridges);
-        return bridges;
+        for(int i=0;i<n;i++){
+            if(dis[i]==-1)
+                dfs(i,-1);
+        }
+        return bridge;
     }
 };
