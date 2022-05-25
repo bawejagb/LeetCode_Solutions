@@ -7,14 +7,12 @@ public:
         int n = envelopes.size();
         vector<int> res;
         sort(envelopes.begin(),envelopes.end(), cmp);
-        res.push_back(envelopes[0][1]);
-        for(int i=1;i<n;i++){
-            if(res.back()<envelopes[i][1])
-                res.push_back(envelopes[i][1]);
-            else{
-                int it = lower_bound(res.begin(),res.end(),envelopes[i][1])-res.begin();
-                res[it] = envelopes[i][1];
-            }
+        for(int i=0;i<n;i++){
+            auto it = lower_bound(res.begin(),res.end(),envelopes[i][1]);
+            if(it==res.end()) 
+                res.emplace_back(envelopes[i][1]);
+            else    
+                *it = envelopes[i][1];
         }
         return res.size();
     }
