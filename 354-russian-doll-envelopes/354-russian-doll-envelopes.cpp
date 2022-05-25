@@ -7,10 +7,7 @@ public:
         vector<pair<int, int> > temp, seq;
         int n = envelopes.size();
         for (int i = 0; i < n; i++) {
-            pair<int, int> p;
-            p.first = envelopes[i][0];
-            p.second = envelopes[i][1];
-            temp.push_back(p);
+            temp.push_back({envelopes[i][0],envelopes[i][1]});
         }
         sort(temp.begin(), temp.end(), cmp);
         vector<int> res;
