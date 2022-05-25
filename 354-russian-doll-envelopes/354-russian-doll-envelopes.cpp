@@ -1,6 +1,6 @@
 class Solution {
     static bool cmp(const pair<int, int> &A, const pair<int, int> &B){
-        return A.first==B.first? A.second>B.second:A.first<B.first;
+        return A.first==B.first ? A.second>B.second : A.first<B.first;
     }
 public:
     int maxEnvelopes(vector<vector<int>>& envelopes) {
@@ -17,7 +17,7 @@ public:
         for(auto& pr: temp)
         {
             auto itr = lower_bound(res.begin(), res.end(), pr.second);
-            if(itr == res.end()) res.push_back(pr.second);
+            if(itr == res.end()) res.emplace_back(pr.second);
             else if(*itr > pr.second) *itr = pr.second;
         }
         return res.size();
