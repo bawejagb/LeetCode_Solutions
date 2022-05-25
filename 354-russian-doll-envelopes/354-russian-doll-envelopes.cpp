@@ -10,7 +10,7 @@ public:
         for(int i=0;i<n;i++){
             auto it = lower_bound(res.begin(),res.end(),envelopes[i][1]);
             if(it==res.end()) 
-                res.emplace_back(envelopes[i][1]);
+                res.push_back(envelopes[i][1]);
             else    
                 *it = envelopes[i][1];
         }
