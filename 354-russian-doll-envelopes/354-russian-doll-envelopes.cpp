@@ -6,8 +6,8 @@ public:
     int maxEnvelopes(vector<vector<int>>& envelopes) {
         vector<pair<int, int> > temp, seq;
         int n = envelopes.size();
-        pair<int, int> p;
         for (int i = 0; i < n; i++) {
+            pair<int, int> p;
             p.first = envelopes[i][0];
             p.second = envelopes[i][1];
             temp.push_back(p);
