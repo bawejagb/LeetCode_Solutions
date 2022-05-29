@@ -1,8 +1,8 @@
 class Solution {
 public:
     int maxProduct(vector<string>& words) {
-        int res=0,n = words.size();
-        int arr[1000];
+        int res = 0, n = words.size();
+        int arr[n];
         for(int i=0;i<n;i++){
             int cur=0;
             for(int j=0;j<words[i].size();j++)
