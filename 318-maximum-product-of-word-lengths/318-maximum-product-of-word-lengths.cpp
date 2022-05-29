@@ -5,8 +5,8 @@ public:
         int arr[n];
         for(int i=0;i<n;i++){
             int cur=0;
-            for(int j=0;j<words[i].size();j++)
-                cur = cur | 1<<(words[i][j]-'a');
+            for(char c : words[i])
+                cur = cur | 1<<(c -'a');
             arr[i] = cur;
         }
         for(int i=0;i<n;i++){
