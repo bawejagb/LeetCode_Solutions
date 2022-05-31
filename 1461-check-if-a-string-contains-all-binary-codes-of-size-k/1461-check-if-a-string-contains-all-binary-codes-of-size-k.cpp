@@ -7,11 +7,10 @@ public:
         int n=s.size();
         for(int i=0; i+k-1<n; i++){
             int j=i+k-1;
-            int val=0, idx = 0;
-            for(int k=j;k>=i;--k){
-                int x = s[k] -'0';
-                val += x*pow(2,idx);
-                idx++;
+            int val=0;
+            for(int t=i;t<=j;++t) {
+                val <<= 1;
+                val += (s[t] - '0');
             }
             visit[val] = true;
         }
