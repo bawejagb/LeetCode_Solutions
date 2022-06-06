@@ -9,7 +9,7 @@
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        unordered_map<ListNode*,int> map;
+        map<ListNode*,int> map;
         for(; headA; ++map[headA], headA = headA -> next);
         while(headB) {
             if(map[headB] > 0) return headB;
