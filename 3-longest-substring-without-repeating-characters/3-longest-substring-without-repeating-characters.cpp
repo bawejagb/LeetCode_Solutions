@@ -1,24 +1,17 @@
 class Solution {
-    int max (int x, int y){
-    return x > y ? x : y;
-}
 public:
     int lengthOfLongestSubstring(string s) {
-        int n = s.size();
-        int start,end,res = 0;
-        start=end=0;
-        unordered_set<char> hset;
-        while(start < n && end < n){
-            if(hset.find(s[start])==hset.end()){
-                hset.insert(s[start]);
-                start++;
-                res = max(res, start-end);
+        vector<int>v(256,-1);
+        int a=-1,m=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(v[s[i]] > a)
+            {
+                a=v[s[i]];
             }
-            else{
-                hset.erase(s[end]);
-                end++;
-            }
+            v[s[i]]=i;
+            m=max(m,i-a);
         }
-        return res;
+        return m;
     }
 };
