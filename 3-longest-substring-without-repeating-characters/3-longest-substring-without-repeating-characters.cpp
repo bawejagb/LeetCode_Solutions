@@ -1,17 +1,19 @@
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        int v[256]{};
-        int a=0,m=0;
-        for(int i=0;i<s.size();i++)
+class Solution
+{
+    public:
+        int lengthOfLongestSubstring(string s)
         {
-            if(v[s[i]] > a)
+            int track[256] {};
+            int left = 0, res = 0;
+            for (int i = 0; i < s.size(); i++)
             {
-                a=v[s[i]];
+                if (track[s[i]] > left)
+                {
+                    left = track[s[i]];
+                }
+                track[s[i]] = i + 1;
+                res = max(res, i - left + 1);
             }
-            v[s[i]]=i+1;
-            m=max(m,i-a+1);
+            return res;
         }
-        return m;
-    }
 };
