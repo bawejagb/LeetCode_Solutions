@@ -4,7 +4,7 @@ public:
         int n,m;
         n = word1.size();
         m = word2.size();
-        vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+        int dp[501][501]{};
         for(int i=0;i<=n;i++) dp[i][0] = i;
         for(int j=0;j<=m;j++) dp[0][j] = j;
         for(int i=1;i<=n;i++){
