@@ -1,118 +1,24 @@
+
 class Solution {
 public:
-       string one(int num){
-       switch(num){
-           case 1: return "One";
-           case 2: return "Two";
-           case 3: return "Three";
-           case 4: return "Four";
-           case 5: return "Five";
-           case 6: return "Six";
-           case 7: return "Seven";
-           case 8: return "Eight";
-           case 9: return "Nine";
-       }
-           return "";
-    }
-       string lessThan20(int num){
-       switch(num){
-           case 10: return "Ten";
-           case 11: return "Eleven";
-           case 12: return "Twelve";
-           case 13: return "Thirteen";
-           case 14: return "Fourteen";
-           case 15: return "Fifteen";
-           case 16: return "Sixteen";
-           case 17: return "Seventeen";
-           case 18: return "Eighteen";
-           case 19: return "Nineteen";
-       }
-           return "";
-    }
-       string ten(int num){
-       switch(num){
-            case 2: return "Twenty";
-           case 3: return "Thirty";
-           case 4: return "Forty";
-           case 5: return "Fifty";
-           case 6: return "Sixty";
-           case 7: return "Seventy";
-           case 8: return "Eighty";
-           case 9: return "Ninety";
-       }
-           return "";
-    }
-   string two(int num){
-        if(num==0){
-            return " ";
-        }
-        if(num<10){
-            return one(num);
-        }
-        if(num<20){
-            return lessThan20(num);
-        }
-        int tenner=num/10;
-        int rest=num%10;
-        if(tenner!=0 && rest!=0){
-            return ten(tenner)+" "+one(rest);
-        }
-        if(tenner!=0){
-            return ten(tenner);
-        }
-        if(rest!=0){
-            return one(rest);
-        }
-       return "";
-    }
- 
-    string three(int num){
-        if(num==0) return "";
-        int hundred=num/100;
-        int rest=num%100;
-        if(rest!=0 && hundred !=0){
-            return one(hundred)+" Hundred "+two(rest);
-        }
-        else if(rest==0){
-            return one(hundred)+" Hundred";
-        }
-        else{
-       return two(rest);
-        }
+     vector<pair<int, string>> nums ={{1000000000, "Billion"}, {1000000, "Million"}, 
+    {1000, "Thousand"}, {100, "Hundred"}, {90, "Ninety"}, {80, "Eighty"}, {70, "Seventy"},
+    {60, "Sixty"}, {50, "Fifty"}, {40, "Forty"}, {30, "Thirty"}, {20, "Twenty"}, {19, "Nineteen"}, 
+    {18, "Eighteen"}, {17, "Seventeen"}, {16, "Sixteen"}, {15, "Fifteen"}, {14, "Fourteen"}, 
+    {13, "Thirteen"}, {12, "Twelve"}, {11, "Eleven"}, {10, "Ten"}, {9, "Nine"}, {8, "Eight"}, 
+    {7, "Seven"}, {6, "Six"}, {5, "Five"}, {4, "Four"}, {3, "Three"}, {2, "Two"}, {1, "One"}};
+    string numberToWords(int num) 
+    {
+      
+       if(num == 0)   return "Zero";
+        
+        for(auto it: nums)
+            if(num >= it.first)
+       return (num >= 100 ? numberToWords(num/it.first)+" " : "") + it.second + (num%it.first == 0 ? "" : " "+numberToWords(num%it.first));
+    
         return "";
-    }
-    string numberToWords(int num) {
-        if(num==0){
-            return "Zero";
-        }
-        int billion=num/1000000000;
-        num%=1000000000;
-        int million=num/1000000;
-        num%=1000000;
-        int thousand=num/1000;
-        num%=1000;
-        string res="";
-        if(billion!=0){
-            res+=three(billion)+" Billion";
-        }
-        if(million!=0){
-             if(res.length()!=0){
-                res+=" ";
-            }
-            res+=three(million)+" Million";
-        }
-        if(thousand!=0){
-             if(res.length()!=0){
-                res+=" ";
-            }
-            res+=three(thousand)+" Thousand";
-        }
-        if(num!=0){
-             if(res.length()!=0){
-                res+=" ";
-            }
-            res+=three(num);
-        }
-        return res;  
+        
+        
+        
     }
 };
