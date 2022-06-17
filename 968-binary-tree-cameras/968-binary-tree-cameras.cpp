@@ -10,22 +10,25 @@
  * };
  */
 class Solution {
-    int dfs(TreeNode*node){
-        if(node == NULL) return 1;     
-        int left = dfs(node->left);
-        int right = dfs(node->right);
-        if(left == 0 || right == 0){
-            cam++;
-            return 2;
+    int traversal(TreeNode* node) {
+        if (!node) return 2;
+        
+        int left = traversal(node->left);
+        int right = traversal(node->right);
+        
+        if (left == 2 && right == 2) return 0;
+        if (left == 0 || right == 0) {
+            result++;
+            return 1;
         }
-        else if(left == 2 || right == 2) return 1;  
-        else return 0;
+        if (left == 1 || right == 1) return 2;
+        return -1;
     }
 public:
-    int cam; 
+    int result;
     int minCameraCover(TreeNode* root) {
-        cam = 0;
-        int ans = dfs(root);
-        return (ans == 0) ? cam+1 : cam;
+        result = 0;
+        if (traversal(root) == 0) result++;
+        return result;
     }
 };
