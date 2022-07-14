@@ -11,43 +11,21 @@
  */
 class Solution {
 public:
-    int pi;
-
-
-int findInd(vector<int> A, int i, int j, int val){
-    
-    
-    for(int k=i; k<=j; k++){
-        if(A[k] == val) return k;
+    TreeNode* buildTree(vector<int> &preorder, vector<int> &inorder) {
+        int n = inorder.size();
+        for (int i = 0; i < n; ++i) mapVal2Idx[inorder[i]] = i;
+        return dfs(0, n - 1, preorder);
     }
-    
-    return -1;
-}
 
-TreeNode* makeTree(vector<int> preorder, vector<int> inorder, int ini, int inj){
-    
-    if(ini > inj) return NULL;
-    
-    pi++;
-    TreeNode* root = new TreeNode(preorder[pi]);
-    int ind = findInd(inorder, ini, inj, root->val);
-    
-    root->left = makeTree(preorder, inorder, ini, ind-1);
-    root->right = makeTree(preorder, inorder, ind+1, inj);
-    
-    
-    return root;
-    
-    
-}
-
-
-TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-    
-    pi = -1;
-    int ini = 0;
-    int inj = inorder.size()-1;
-    
-    return makeTree(preorder, inorder, ini, inj);
-}
+private:
+    unordered_map<int, int> mapVal2Idx;
+    int preIdx = 0;
+    TreeNode* dfs(int left, int right, vector<int> &preorder) {
+        if (left > right) return nullptr;
+        TreeNode *root = new TreeNode(preorder[preIdx++]);
+        int mid = mapVal2Idx[root->val];
+        root->left = dfs(left, mid - 1, preorder);
+        root->right = dfs(mid + 1, right, preorder);
+        return root;
+    }
 };
