@@ -3,8 +3,6 @@ public:
     int numMatchingSubseq(string s, vector<string>& words) {
         int count = 0;
         int pos;
-        if (s.empty())
-            return 0;
         for (const string& w : words){
             if (w.empty())
                 continue;
