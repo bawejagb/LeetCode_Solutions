@@ -25,7 +25,6 @@ public:
             cnt++;
             if(start&&end) break;
         }
-        if(!start || !end) return head;
         node = start;
         next = end->next;
         ListNode *pv, *nx;
