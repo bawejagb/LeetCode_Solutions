@@ -1,18 +1,16 @@
 class Solution {
 public:
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        int n = matrix.size() ;
-        int m = matrix[0].size() ;
-        int i = 0 ;
-        int j = m-1 ;
-        while( i<n and j>=0 )
-        {
-            if( matrix[i][j] == target )
-                return true ;
-            else if ( matrix[i][j] <  target )
-                i++ ;
-            else j-- ;
+        ios::sync_with_stdio(0);
+        int i = 0, j = matrix[0].size(), k;
+        while(i < matrix.size() && j && (k = matrix[i][j-1]) != target) {
+            if (k > target) j--;
+            else if(k == target) return true;
+            else i++;
         }
-        return false ;
+        
+        while (matrix.size()) matrix.pop_back();
+        
+        return k == target;
     }
 };
