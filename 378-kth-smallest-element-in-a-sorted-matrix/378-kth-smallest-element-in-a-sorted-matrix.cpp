@@ -6,7 +6,7 @@ public:
         int high=matrix[n-1][n-1];
         int ans=0;
         while(low<=high){
-            int mid=low + (high-low)/2;
+            int mid=(high+low)/2;
             int count_smaller=0;
             for(int i=0;i<n;i++){
                 count_smaller+=upper_bound(matrix[i].begin(),matrix[i].end(),mid)-matrix[i].begin();
