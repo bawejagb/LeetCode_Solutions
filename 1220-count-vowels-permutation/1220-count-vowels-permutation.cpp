@@ -1,7 +1,7 @@
 class Solution {
 public:
     int countVowelPermutation(int n) {
-        vector<vector<long long>> dp(n+1,vector<long long>(5,0));
+        long long dp[20001][5]{};
         //INDEX: a = 0, e = 1, i = 2, o = 3, u = 4
         int mod = (int)1e9 + 7;
         
