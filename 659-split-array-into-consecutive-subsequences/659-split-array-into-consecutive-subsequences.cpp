@@ -1,8 +1,8 @@
 class Solution {
 public:
     bool isPossible(vector<int>& nums) {
-        unordered_map<int,int> hmap,pmap;
-        for(int x: nums) hmap[x]++;
+        int hmap[2002]{},pmap[2002]{};
+        for(int i=0;i<nums.size();i++){ nums[i]+=1000;hmap[nums[i]]++;}
         for(int x : nums){
             if(hmap[x]==0) continue;
             if(pmap[x]>0){
