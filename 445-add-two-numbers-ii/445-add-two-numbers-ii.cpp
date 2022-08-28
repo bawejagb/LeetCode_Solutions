@@ -9,41 +9,47 @@
  * };
  */
 class Solution {
-    ListNode* reverse(ListNode* l1){
-        ListNode* prev = NULL;
-        ListNode* node = l1;
-        ListNode* next;
-        while(node){
-            next = node->next;
-            node->next = prev;
-            prev = node;
-            node = next;
-            
+    ListNode* res=NULL;
+    int addNodes(ListNode* l1, ListNode* l2, int l1Count, int l2Count){
+        if(l1Count==0&&l2Count==0) return 0;
+        int carry,sum = 0;
+        if(l1Count>l2Count){
+            carry = addNodes(l1->next, l2, l1Count-1, l2Count);
+            sum += l1->val;
         }
-        return prev;
+        else if(l2Count>l1Count){
+            carry = addNodes(l1, l2->next, l1Count, l2Count-1);
+            sum += l2->val;
+        }
+        else{
+            carry = addNodes(l1->next, l2->next, l1Count-1, l2Count-1);
+            sum += l1->val + l2->val;
+        }
+        sum += carry;
+        ListNode* node = new ListNode(sum%10);
+        node->next = res;
+        res = node;
+        return sum/10;
     }
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* a1;
-        ListNode* a2;
-        ListNode res;
-        ListNode* node = &res;
-        a1 = reverse(l1);
-        a2 = reverse(l2);
-        int sum=0;
-        while(a1||a2||sum>0){
-            if(a1){
-                sum += a1->val;
-                a1 = a1->next;
-            }
-            if(a2){
-                sum += a2->val;
-                a2 = a2->next;
-            }
-            node->next = new ListNode(sum%10);
-            sum /= 10;
-            node = node->next;
+        int l1Count=0,l2Count=0;
+        ListNode* temp = l1;
+        while(temp){
+            temp = temp->next;
+            l1Count++;
         }
-        return reverse(res.next);
+        temp = l2;
+        while(temp){
+            temp = temp->next;
+            l2Count++;
+        }
+        bool carry = addNodes(l1, l2, l1Count, l2Count);
+        if(carry){
+            ListNode* node = new ListNode(1);
+            node->next = res;
+            res = node;
+        }
+        return res;
     }
 };
