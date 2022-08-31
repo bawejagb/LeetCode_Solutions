@@ -1,33 +1,32 @@
-class LRUCache {
-    unordered_map<int,list<pair<int,int>>::iterator> track;
-    int cap;
-    list<pair<int,int>> lruList; 
-public:
-    LRUCache(int capacity) {
-        cap = capacity;
-    }
-    
-    int get(int key) {
-        if(track.find(key)!=track.end()){
-            lruList.splice(lruList.begin(),lruList, track[key]);
-            return track[key]->second;
-        }
-        return -1;
-    }
-    
-    void put(int key, int value) {
-        if(track.find(key)!=track.end()){
-            lruList.splice(lruList.begin(),lruList,track[key]);
-            track[key]->second = value;
-            return;
-        }
-        else if(track.size()==cap){
-            track.erase(lruList.back().first);
-            lruList.pop_back();
-        }
-        lruList.push_front({key,value});
-        track[key] = lruList.begin();
-    }
+class LRUCache{
+	unordered_map<int, list<pair<int,int>>::iterator> LRUTrack;
+	int cap;
+	list<pair<int,int>> LRUList;
+	public:
+		
+	LRUCache(int capacity){
+		cap = capacity;
+	}	
+	int get(int key){
+		if(LRUTrack.find(key)!=LRUTrack.end()){
+			LRUList.splice(LRUList.begin(),LRUList,LRUTrack[key]);
+			return LRUTrack[key]->second;
+		}
+		return -1;
+	}
+	void put(int key, int value){
+		if(LRUTrack.find(key)!=LRUTrack.end()){
+			LRUList.splice(LRUList.begin(),LRUList, LRUTrack[key]);
+			LRUTrack[key]->second = value;
+			return;
+		}
+		else if(LRUTrack.size()==cap){
+			LRUTrack.erase(LRUList.back().first);
+			LRUList.pop_back();
+		}
+		LRUList.push_front({key,value});
+		LRUTrack[key] = LRUList.begin();
+	}
 };
 
 /**
