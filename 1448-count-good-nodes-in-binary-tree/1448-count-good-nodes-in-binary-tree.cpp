@@ -10,20 +10,15 @@
  * };
  */
 class Solution {
-    int dfs(TreeNode* node, int max_val){
-        if(!node) return 0;
-        int cnt = 0;
-        if(node->val>=max_val){
-            max_val = node->val;
-            cnt++;
-        }
-        cnt += dfs(node->left, max_val);
-        cnt += dfs(node->right, max_val);
-        return cnt;
+    int solve(TreeNode* root,int maxi){
+        if(root==NULL) return 0;
+        maxi=max(root->val,maxi);
+        if(root->val>=maxi)
+            return 1+ solve(root->left,maxi)+solve(root->right,maxi);
+        return solve(root->left,maxi)+solve(root->right,maxi); 
     }
-public:
+    public:
     int goodNodes(TreeNode* root) {
-        int max_val = -1e5;
-        return dfs(root, max_val);
+        return solve(root,INT_MIN);   
     }
 };
