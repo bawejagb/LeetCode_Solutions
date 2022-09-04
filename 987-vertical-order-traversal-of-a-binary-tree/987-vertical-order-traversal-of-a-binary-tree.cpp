@@ -10,10 +10,10 @@
  * };
  */
 class Solution {
-    map<int,map<int,vector<int>>> res;
+    map<int,map<int,multiset<int>>> res;
     void dfs(TreeNode* node, int row, int col){
         if(!node) return;
-        res[col][row].push_back(node->val);
+        res[col][row].insert(node->val);
         dfs(node->left, row+1, col-1);
         dfs(node->right, row+1, col+1);
     }
@@ -24,7 +24,6 @@ public:
         for(auto col : res){
             vector<int> temp;
             for(auto row : col.second){
-                sort(row.second.begin(), row.second.end());
                 temp.insert(temp.end(), row.second.begin(), row.second.end());
             }
             ans.push_back(temp);
