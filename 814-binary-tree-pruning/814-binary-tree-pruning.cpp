@@ -10,19 +10,13 @@
  * };
  */
 class Solution {
-    bool dfs(TreeNode* root){
-        if(!root) return 0;
-        if(!dfs(root->left))
-            root->left=NULL;
-        if(!dfs(root->right))
-            root->right = NULL;
-        if(root->val==0 && !root->left && !root->right) return 0;
-        return 1;
-    }
+
 public:
     TreeNode* pruneTree(TreeNode* root) {
-        if(!dfs(root))
-            return NULL;
+        if(!root) return NULL;
+        root->left = pruneTree(root->left);
+        root->right = pruneTree(root->right);
+        if(!root->left && !root->right && root->val ==0) return NULL;
         return root;
     }
 };
