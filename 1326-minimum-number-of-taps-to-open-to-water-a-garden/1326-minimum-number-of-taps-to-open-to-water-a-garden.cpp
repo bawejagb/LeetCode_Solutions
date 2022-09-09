@@ -1,20 +1,23 @@
 class Solution {
 public:
     int minTaps(int n, vector<int>& ranges) {
-        vector<vector<int>> area;
-        for(int i = 0; i <=n; i++)
-            area.push_back({i - ranges[i], i + ranges[i]});
-        sort(area.begin(), area.end());
-        int i = 0, start = 0, end = 0, ans = 0;
-        while(start < n) {
-            while(i < area.size() && area[i][0] <= start) {
-                end = max(end, area[i][1]);
-                i++;
-            }
-            if(start == end) return -1;
-            start = end;
-            ans++;
+        vector<int> jumps(n+1, 0);
+        for (int i=0; i<ranges.size(); i++) {
+            int l = max(0, i-ranges[i]);
+            int r = min(n, i+ranges[i]);
+            jumps[l] = max(jumps[l], r-l);
         }
-        return ans;
+        int count = 0, curEnd = 0, curFarthest = 0;
+        for (int i = 0; i<n; i++) {
+            if (i>curFarthest)
+                return -1;
+            curFarthest = max(curFarthest, i + jumps[i]);
+            
+            if (i == curEnd) {
+                count++;
+                curEnd = curFarthest;
+            }
+        }
+        return curFarthest >= n ? count : -1;
     }
 };
