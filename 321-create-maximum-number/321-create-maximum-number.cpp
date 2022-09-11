@@ -8,7 +8,7 @@ class Solution {
             if(st.empty()) st.push(nums[i]), rem--;
             else{
                 int avail = n-i;
-                while(!st.empty() and st.top()<nums[i] and rem < k and avail > rem) st.pop(), rem++;
+                while(!st.empty() and st.top()<nums[i] and avail > rem) st.pop(), rem++;
                 st.push(nums[i]);
                 rem--;
             }
