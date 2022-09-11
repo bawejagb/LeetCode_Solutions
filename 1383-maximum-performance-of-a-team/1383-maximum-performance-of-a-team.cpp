@@ -9,13 +9,11 @@ public:
         priority_queue<int,vector<int>,greater<int>> pq;
         long sum = 0, ans = 0;
         for(int i=n-1;i>=0;i--){
-            if(pq.size()==k && engr[i].second>pq.top()){
+            sum += engr[i].second;
+            pq.push(engr[i].second);
+            if(pq.size()>k){
                 sum -= pq.top();
                 pq.pop();
-            }
-            if(pq.size()<k){
-                sum += engr[i].second;
-                pq.push(engr[i].second);
             }
             ans = max(ans, sum*engr[i].first);
         }
