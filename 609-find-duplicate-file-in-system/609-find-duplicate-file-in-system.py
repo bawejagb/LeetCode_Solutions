@@ -1,6 +1,5 @@
 class Solution:
     def findDuplicate(self, paths: List[str]) -> List[List[str]]:
-        result = []
         hmap = {}
         for files in paths:
             fileList = files.split(" ")
@@ -11,7 +10,5 @@ class Solution:
                     if(data not in hmap.keys()):
                         hmap[data] = []
                     hmap[data].append(fileList[0]+'/'+file)
-        for key in hmap.keys():
-            if len(hmap[key])>1:
-                result.append(hmap[key])
-        return result
+        
+        return [x for x in hmap.values() if len(x) > 1]
