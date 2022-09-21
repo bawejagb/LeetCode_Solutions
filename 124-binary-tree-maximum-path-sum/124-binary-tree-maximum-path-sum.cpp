@@ -10,20 +10,17 @@
  * };
  */
 class Solution {
-    int min_val = -1e8;
-    int res= min_val;
-    int dfs(TreeNode* root){
-        if(!root) return min_val;
-        int val = root->val;
-        int left_val,right_val;
-        left_val = dfs(root->left);
-        right_val = dfs(root->right);
-        res = max({res,left_val+val,right_val+val,val,min_val,left_val+right_val+val});
-        return max({left_val+val,right_val+val,val,min_val});
+    int ansmaxPathSum(TreeNode* root,int& maxi) {
+      if(root==NULL) return 0;
+      int l=max(0,ansmaxPathSum(root->left,maxi));
+      int r=max(0,ansmaxPathSum(root->right,maxi));
+      maxi=max(maxi,root->val+r+l);
+      return root->val+max(l,r);
     }
 public:
     int maxPathSum(TreeNode* root) {
-        dfs(root);
-        return res;
+        int ans=INT_MIN;
+        ansmaxPathSum(root,ans);
+        return ans;
     }
 };
