@@ -1,20 +1,27 @@
 class Solution {
 public:
-    int shortestSubarray(vector<int>& nums, int k) {
-        int ans=INT_MAX;
-        long sum=0;
-        deque<pair<long,int>> dq;
-        for(int i=0;i<nums.size();i++){
-            sum += nums[i];
-            if(sum>=k) ans = min(ans, i+1);
-            while(!dq.empty() && (sum-dq.front().first)>=k){
-                ans = min(ans, i-dq.front().second);
-                dq.pop_front();
+    #define LL long long
+    int shortestSubarray(vector<int>& nums, int k) { 
+       int size = nums.size();
+        //presum
+        vector<LL> s(size+1);
+        for (int i = 1; i <= size; i++)
+            s[i] = s[i - 1] + nums[i - 1];
+        //increase stack for index
+        vector<int> stk(size+1);
+        int top = 0;
+        int res = INT_MAX;
+        for (int i = 1,j=0;i <= size;i++){
+            while (j<=top && s[stk[top]] >= s[i])
+                top--;
+            stk[++top] = i;
+            while (j < top && s[stk[j]] <= s[i] - k){
+                res = min(res, i - stk[j]);
+                j++;
             }
-            while(!dq.empty() && sum < dq.back().first)
-                dq.pop_back();
-            dq.push_back({sum,i});
         }
-        return ans==INT_MAX?-1: ans;
+        if (res == INT_MAX) return -1;
+        return res;
     }
+    
 };
