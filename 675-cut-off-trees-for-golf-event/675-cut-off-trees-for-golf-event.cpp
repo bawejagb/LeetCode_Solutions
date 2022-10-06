@@ -1,59 +1,61 @@
 
 class Solution {
-    struct Tree{
-      int val,x,y;  
-    };
-    static bool comp(const Tree &a,const Tree &b){
-        return a.val < b.val;
-    }
-    int dx[4] = {0,0,1,-1};
-    int dy[4] = {1,-1,0,0};
-    int bfs(int x1,int y1, int x2, int y2, vector<vector<int>> &forest){
-        int m = forest.size();
-        int n = forest[0].size();
-        bool visit[52][52]{};
-        queue<pair<int,int>> qt;
-        int level = 0;
-        qt.push({x1,y1});
-        while(!qt.empty()){
-            int size = qt.size();
-            while(size--){
-                auto node = qt.front();
-                qt.pop();
-                int x = node.first;
-                int y = node.second;
-                if(x==x2 and y==y2) return level;
-                if(visit[x][y]) continue;
-                visit[x][y] = true;
-                for(int i=0;i<4;i++){
-                    int nx = x+dx[i];
-                    int ny = y+dy[i];
-                    if(nx>=0 and ny >= 0 and nx <m and ny <n and !visit[nx][ny] and forest[nx][ny]) qt.push({nx,ny});
+    int bfs(int src, int dest, vector<vector<int>> &forest, int m, int n) {
+        if(src==dest) return 0;
+        bool visited[52*52]{};
+        int dist = 0;
+        queue<int> q;
+        q.push(src);
+        visited[src] = true;
+        while (!q.empty()) {
+            int size = q.size();
+            dist++;
+            for (int i = 0; i < size; i++) {
+                int x = q.front() / m;
+                int y = q.front() % m;
+                q.pop();
+                if (x > 0 && !visited[(x - 1) * m + y] && forest[x - 1][y]) {
+                    visited[(x - 1) * m + y] = true;
+                    q.push((x - 1) * m + y);
+                    if ((x - 1) * m + y == dest) return dist;
+                }
+                if (y > 0 && !visited[(x)*m + y - 1] && forest[x][y - 1]) {
+                    visited[(x)*m + y - 1] = true;
+                    q.push((x)*m + y - 1);
+                    if ((x)*m + y - 1 == dest) return dist;
+                }
+                if (x < n - 1 && !visited[(x + 1) * m + y] && forest[x + 1][y]) {
+                    visited[(x + 1) * m + y] = true;
+                    q.push((x + 1) * m + y);
+                    if ((x + 1) * m + y == dest) return dist;
+                }
+                if (y < m - 1 && !visited[(x)*m + y + 1] && forest[x][y + 1]) {
+                    visited[(x)*m + y + 1] = true;
+                    q.push((x)*m + y + 1);
+                    if ((x)*m + y + 1 == dest) return dist;
                 }
             }
-            level++;
         }
         return -1;
     }
 public:
-    int cutOffTree(vector<vector<int>>& forest) {
-        int m = forest.size();
-        int n = forest[0].size();
-        vector<Tree> nodes;
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                if(forest[i][j]>1)
-                    nodes.push_back({forest[i][j],i,j});
+    int cutOffTree(vector<vector<int>> &forest) {
+        vector<pair<int, int>> pos;
+        int n = forest.size();
+        int m = forest[0].size();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (forest[i][j] > 1) pos.push_back({forest[i][j], i * m + j});
             }
         }
-        nodes.push_back({0,0,0});
-        sort(nodes.begin(),nodes.end(),comp);
-        int ans=0;
-        for(int i=0;i<nodes.size()-1;i++){
-            int val = bfs(nodes[i].x,nodes[i].y,nodes[i+1].x,nodes[i+1].y, forest);
-            if(val < 0) return -1;
-            ans += val;
+        pos.push_back({0, 0});
+        sort(pos.begin(), pos.end());
+        int res = 0;
+        for (int i = 0; i < pos.size() - 1; i++) {
+            int temp = bfs(pos[i].second, pos[i + 1].second, forest, m, n);
+            if (temp == -1) return -1;
+            res += temp;
         }
-        return ans;
+        return res;
     }
 };
