@@ -29,7 +29,6 @@ public:
         }
         for(int i=0;i<n;i++) if(dis[i]<=maxMoves) ans++;
         for(auto &e : edges){
-            int minNode = min(dis[e[0]],dis[e[1]]);
             if(dis[e[0]]<=maxMoves and dis[e[1]]<=maxMoves)
                 ans += min(2*maxMoves-dis[e[0]]-dis[e[1]],e[2]);
             else if(dis[e[0]]<=maxMoves)
