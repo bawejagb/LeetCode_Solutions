@@ -10,16 +10,16 @@
  * };
  */
 class Solution {
-    vector<int> vec;
-    void inOrder(TreeNode* node){
+    void inOrder(TreeNode* node, vector<int> &vec){
         if(!node) return;
-        inOrder(node->left);
+        inOrder(node->left, vec);
         vec.push_back(node->val);
-        inOrder(node->right);
+        inOrder(node->right, vec);
     }
 public:
     bool findTarget(TreeNode* root, int k) {
-        inOrder(root);
+        vector<int> vec;
+        inOrder(root, vec);
         int i=0, j = vec.size()-1;
         while(i<j){
             if(vec[i]+vec[j]==k) return true;
