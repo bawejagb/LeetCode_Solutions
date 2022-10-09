@@ -10,14 +10,23 @@
  * };
  */
 class Solution {
-    unordered_set<int> hmap;
+    vector<int> vec;
+    void inOrder(TreeNode* node){
+        if(!node) return;
+        inOrder(node->left);
+        vec.push_back(node->val);
+        inOrder(node->right);
+    }
 public:
     bool findTarget(TreeNode* root, int k) {
-        if(!root) return false;
-        if(hmap.find(1e5+(k-root->val))!=hmap.end()) return true;
-        hmap.insert(1e5+root->val);
-        if(findTarget(root->left, k)) return true;
-        if(findTarget(root->right, k)) return true;
+        inOrder(root);
+        int i=0, j = vec.size()-1;
+        while(i<j){
+            if(vec[i]+vec[j]==k) return true;
+            if(vec[i]+vec[j]<k) i++;
+            else j--;
+        }
         return false;
     }
+    
 };
