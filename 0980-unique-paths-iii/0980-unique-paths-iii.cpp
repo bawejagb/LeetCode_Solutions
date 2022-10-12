@@ -6,10 +6,10 @@ class Solution {
         for(int i=0;i<4;i++){
             int nx = dx[i]+a;
             int ny = dy[i]+b;
-            if(nx<0||ny<0||nx==m||ny==n||grid[nx][ny]==-1||grid[nx][ny]==3) continue;
+            if(nx<0||ny<0||nx==m||ny==n) continue;
             if(cnt==0 && grid[nx][ny]==2) path++;
             else if(grid[nx][ny]==0){
-                grid[nx][ny]=3;
+                grid[nx][ny]=-1;
                 backtrack(grid,nx,ny,cnt-1,m,n);
                 grid[nx][ny]=0;
             }
