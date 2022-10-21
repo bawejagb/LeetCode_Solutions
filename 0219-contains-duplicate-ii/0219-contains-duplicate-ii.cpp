@@ -1,11 +1,17 @@
 class Solution {
 public:
     bool containsNearbyDuplicate(vector<int>& nums, int k) {
-        unordered_map<int,int> hmap;
-        for(int i = 0; i < nums.size(); i++){
-            if(hmap.find(nums[i])!=hmap.end() && i-hmap[nums[i]] <= k) return true;
-            hmap[nums[i]] = i;
+         ios_base::sync_with_stdio(false);
+        cin.tie(0);
+        cout.tie(0);
+        uint8_t  size = nums.size() - 1;
+        for(uint8_t  i = 0; i < size; ++i)
+        {
+            for(uint8_t  j = i + 1; j <= size; ++j)
+                if((nums[i] == nums[j]) &&  j-i <= k)
+                    return true;
         }
+        
         return false;
     }
 };
