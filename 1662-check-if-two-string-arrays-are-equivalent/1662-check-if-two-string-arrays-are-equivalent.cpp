@@ -1,22 +1,22 @@
 class Solution {
 public:
     bool arrayStringsAreEqual(vector<string>& word1, vector<string>& word2) {
-        int n,m,i=0,j=0;
-        m = word2.size();
-        n = word2[0].size();
-        for(string word: word1){
-            for(char c : word){
-                if(i+1<m && j==n){
-                    j=0;
-                    i++;
-                    n = word2[i].size();
-                }
-                if(i<m && j < n && c == word2[i][j]){
-                    j++;
-                }
-                else return false;
-            }
+        string a1="";
+        string a2="";
+        for(int i=0; i<word1.size(); i++){
+            a1+=word1[i];
         }
-        return (j==n && i == m-1);
+        for(int i=0; i<word2.size(); i++){
+            a2+=word2[i];
+        }
+        int j=0;
+        int n1=a1.length();
+        int n2=a2.length();
+        while(a1[j]!='\0' && a2[j]!='\0'){
+            if(n1!=n2) return false;
+            if(a1[j]!=a2[j]) return false;
+            j++;
+        }
+        return true;
     }
 };
