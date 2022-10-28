@@ -1,10 +1,10 @@
 class Solution {
 public:
     int nthUglyNumber(int n) {
-        vector<int> res;
-        int two=0, three=0, five=0;
-        res.push_back(1);
-        while(res.size()<n){
+        int res[n];
+        int idx=1,two=0, three=0, five=0;
+        res[0] = 1;
+        while(idx<n){
             int val2 = res[two]*2;
             int val3 = res[three]*3;
             int val5 = res[five]*5;
@@ -12,9 +12,10 @@ public:
             if(minVal==val2) two++;
             else if(minVal==val3) three++;
             else five++;
-            if(minVal==res.back()) continue;
-            res.push_back(minVal);
+            if(minVal==res[idx-1]) continue;
+            res[idx] = minVal;
+            idx++;
         }
-        return res.back();
+        return res[n-1];
     }
 };
