@@ -1,30 +1,28 @@
+
 class Solution {
+   bool getDiff(string s1, string s2){
+        int count=0;
+        for(int i=0;i<8;i++){
+            if(s1[i]!= s2[i])
+                count++;
+        }
+        return count==1;
+    }
 public:
     int minMutation(string start, string end, vector<string>& bank) {
-        set<string> tset, hset(bank.begin(),bank.end());
-        if(hset.find(end)==hset.end()) return -1;
-        queue<string> qt;
-        int cnt = 0;
-        char choice[4] = {'A','C','G','T'};
-        qt.push(start);
-        tset.insert(start);
-        while(!qt.empty()){
-            int size = qt.size();
-            cnt++;
-            while(size--){
-                string st = qt.front();
-                qt.pop();
-                for(int j=0;j<4;j++){
-                    for(int i=0;i<st.size();i++){
-                        char temp = st[i];
-                        st[i] = choice[j];
-                        if(st == end) return cnt;
-                        if(tset.find(st)==tset.end() and hset.find(st)!=hset.end()){
-                            tset.insert(st);
-                            qt.push(st);
-                        }
-                        st[i] = temp;
-                    }
+        queue<pair<string,int>>q;
+        q.push({start,0});
+        unordered_map<string,bool> mp;
+        mp[start]=true;
+        while(!q.empty()){
+            pair<string,int> p = q.front();
+            q.pop();
+            for(string s: bank){
+                if(mp.find(s) == mp.end() && getDiff(s,p.first)){
+                    if(s == end)
+                        return p.second+1;
+                    q.push({s,p.second+1});
+                    mp[s] = true;
                 }
             }
         }
