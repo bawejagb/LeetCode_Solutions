@@ -1,20 +1,20 @@
 class Solution {
 public:
     vector<vector<int>> findWinners(vector<vector<int>>& matches) {
-        vector<int> r1,r2;
-        map<int,int> win,loss;
-        for(auto pr : matches){
-            win[pr[0]]++;
-            loss[pr[1]]++;
+        int player[100001] = {0}, loss[100001] = {0};
+        for(int i = 0; i < matches.size(); i++) {
+            player[matches[i][0]]++;
+            player[matches[i][1]]++;
+            loss[matches[i][1]]++;
         }
-        for(auto p : win){
-            if(loss.find(p.first)==loss.end())
-                r1.push_back(p.first);
+        
+        vector<vector<int>> ans(2);
+        for(int i = 0; i < 100001; i++)   {
+            if(player[i] && (loss[i] == 0))
+                ans[0].push_back(i);
+            if(player[i] && (loss[i] == 1))
+                ans[1].push_back(i);
         }
-        for(auto p: loss){
-            if(p.second==1)
-                r2.push_back(p.first);
-        }
-        return {r1,r2};
+        return ans;
     }
 };
