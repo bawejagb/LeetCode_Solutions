@@ -10,14 +10,20 @@
  * };
  */
 class Solution {
-    int dfs(TreeNode* node, int minVal, int maxVal){
-        if(!node) return maxVal-minVal;
+    void dfs(TreeNode* node, int minVal, int maxVal, int &res){
+        if(!node){
+            res = max(res, maxVal-minVal);
+            return;
+        }
         minVal = min(minVal,node->val);
         maxVal = max(maxVal, node->val);
-        return max(dfs(node->left,minVal, maxVal), dfs(node->right,minVal, maxVal));
+        dfs(node->left,minVal, maxVal,res);
+        dfs(node->right,minVal, maxVal,res);
     }
 public:
     int maxAncestorDiff(TreeNode* root) {
-        return dfs(root, root->val, root->val);
+        int res=0;
+        dfs(root, root->val, root->val,res);
+        return res;
     }
 };
