@@ -1,19 +1,18 @@
 class Solution {
 public:
     int minStoneSum(vector<int>& piles, int k) {
-        priority_queue<int> qt;
         int res=0;
+        int freq[10001]={};
         for(int val : piles)
-            qt.push(val);
-        while(k--){
-            int val = qt.top();
-            qt.pop();
-            qt.push(val-val/2);
+            freq[val]++;
+        for(int i=10000; i and k; i--){
+            int rem = min(k,freq[i]);
+            freq[i-i/2] += rem;
+            freq[i] -= rem;
+            k -= rem;
         }
-        while(!qt.empty()){
-            res += qt.top();
-            qt.pop();
-        }
+        for(int i=1;i<=10000;i++)
+            res += i*freq[i];
         return res;
     }
 };
