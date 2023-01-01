@@ -1,19 +1,22 @@
 class Solution {
 public:
     void setZeroes(vector<vector<int>>& matrix) {
-        vector<pair<int,int>> lst;
+        bool di[200]{},dj[200]{};
         int m = matrix.size();
         int n = matrix[0].size();
         for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++)
-                if(matrix[i][j]==0)
-                    lst.push_back({i,j});
+            for(int j=0;j<n;j++){
+                if(matrix[i][j]==0){
+                    di[i]=1;
+                    dj[j]=1;
+                }
+            }
         }
-        for(auto pr: lst){
-            int x = pr.first;
-            int y = pr.second;
-            for(int i=0;i<m;i++) matrix[i][y] = 0;
-            for(int j=0;j<n;j++) matrix[x][j] = 0;
+        for(int k=0;k<200;k++){
+            if(di[k])
+                for(int i=0;i<n;i++) matrix[k][i] = 0;
+            if(dj[k])
+                for(int i=0;i<m;i++) matrix[i][k] = 0;
         }
     }
 };
