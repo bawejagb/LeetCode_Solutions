@@ -1,19 +1,16 @@
 class Solution {
 public:
     int minDeletionSize(vector<string>& strs) {
-        int cnt=0;
-        string temp = strs[0];
-        int len = temp.size();
-        bool mark[1001]{};
-        for(int i=1;i<strs.size();i++){
-            for(int j=0;j<len;j++){
-                if(strs[i][j]<temp[j])
-                    mark[j]=true;
+        int cnt = 0;
+        int n = strs.size(), m = strs[0].size();
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n-1; j++){
+                if(strs[j][i]>strs[j+1][i]){
+                    cnt++;
+                    break;
+                }
             }
-            temp = strs[i];
         }
-        for(int i=0;i<len;i++)
-            if(mark[i]) cnt++;
         return cnt;
     }
 };
