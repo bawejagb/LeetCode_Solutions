@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minimumRounds(vector<int>& tasks) {
-        map<int,int> hmap;
+        unordered_map<int,int> hmap;
         for(int num : tasks)
             hmap[num]++;
         int cnt,val,res=0;
