@@ -1,40 +1,38 @@
 class Solution {
-public:
-    bool solve(string &s,string &p,int i,int j,int &m,int &n,vector<vector<int>> &v){
-        if(i==m&&j==n)return true;
-        if(i == m){
-            for(int k = j; k < n; k++){
-                if(p[k] != '*')return false;
+    bool solve(string &s,string &p,int &m,int &n,int a,int b, vector<vector<int>>&dp){
+        if(a==m and b==n) return true;
+        if(a==m){
+            for(int i=b;i<n;i++){
+                if(p[i]!='*') return false;
             }
             return true;
         }
-        if(j == n && i != m)return false;
-        
-        if(v[i][j] != -1)return v[i][j];
+        if(b==n) return false;
+        if(dp[a][b]!=-1) return dp[a][b];
         bool ans = false;
-        if(p[j]==s[i]){
-            if(solve(s,p,i+1,j+1,m,n,v))
-            ans = true;
+        if(s[a]==p[b]){
+            if(solve(s,p,m,n,a+1,b+1,dp))
+                ans=true;
         }
-        if(p[j]== '?'){
-            if(solve(s,p,i+1,j+1,m,n,v))
-            ans= true;
+        else if(p[b]=='?'){
+            if(solve(s,p,m,n,a+1,b+1,dp))
+                ans=true;
         }
-        else if(p[j] == '*'){
-            if(solve(s,p,i+1,j+1,m,n,v)){
-                ans = true;
-            }if(solve(s,p,i+1,j,m,n,v)){
-                ans = true;
-            }if(solve(s,p,i,j+1,m,n,v)){
-                ans = true;
-            }
+        else if(p[b]=='*'){
+            if(solve(s,p,m,n,a+1,b+1,dp))
+                ans=true;
+            if(solve(s,p,m,n,a,b+1,dp))
+                ans=true;
+            if(solve(s,p,m,n,a+1,b,dp))
+                ans=true;
         }
-        v[i][j] = ans;
+        dp[a][b] = ans;
         return ans;
     }
+public:
     bool isMatch(string s, string p) {
-        int m = s.length(), n = p.length();
-        vector<vector<int>> v(m,vector<int>(n,-1));
-        return solve(s,p,0,0,m,n,v);
+        int m = s.size(), n = p.size();
+        vector<vector<int>> dp(m,vector<int>(n,-1));
+        return solve(s,p,m,n,0,0,dp);
     }
 };
