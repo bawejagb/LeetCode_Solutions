@@ -8,8 +8,6 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-
-
 class Solution {
     ListNode* mergeTwoList(ListNode* l1, ListNode* l2) {
         ListNode* result = nullptr;
