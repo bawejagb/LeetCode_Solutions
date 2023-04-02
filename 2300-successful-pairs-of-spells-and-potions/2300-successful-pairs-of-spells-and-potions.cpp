@@ -11,7 +11,7 @@ public:
             int right = m - 1;
             while (left <= right) {
                 int mid = left + (right - left) / 2;
-                long long product = (long long)spell * (long long)potions[mid];
+                long product = (long)spell * (long)potions[mid];
                 if (product >= success) right = mid - 1;
                 else left = mid + 1;
             }
